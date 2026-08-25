@@ -6,10 +6,11 @@ A comprehensive full-stack web platform designed for corporate catering manageme
 
 ## Tech Stack
 
-* **Frontend:** Next.js 15 (App Router), React 19, TypeScript, Tailwind CSS v4.
-* **UI Components & Charts:** Material UI (MUI v7), `@mui/x-date-pickers`, Recharts, Lottie React.
-* **Backend & Persistence:** Next.js Route Handlers (`/api/*`), Prisma ORM 7 (`@prisma/client`, `@prisma/adapter-pg`), PostgreSQL.
-* **Data & Spreadsheet Processing:** ExcelJS, SheetJS (`xlsx`), PapaParse, csv-parser.
+* **Frontend:** Angular 19+ (Standalone Components, SCSS, RxJS, HttpClient).
+* **UI Components & Charts:** Angular Material, Material Design Symbols.
+* **Backend:** Node.js, Express, TypeScript (`tsx`).
+* **Persistence & Database:** Prisma ORM 7 (`@prisma/client`, `@prisma/adapter-pg`), PostgreSQL.
+* **Data & Spreadsheet Processing:** ExcelJS, SheetJS (`xlsx`), PapaParse.
 * **Automation & Background Jobs:** Node-cron for scheduled tasks.
 
 ---
@@ -18,17 +19,30 @@ A comprehensive full-stack web platform designed for corporate catering manageme
 
 ```text
 caterlinksoftware/
-├── app/                  # App Router views & API Route Handlers
-│   ├── api/              # Backend endpoints (auth, attendance, orders, reports, etc.)
-│   ├── mk/               # Admin, provider, and employee dashboard views
-│   ├── layout.tsx        # Root application layout
-│   └── page.tsx          # Landing / Entry page
-├── lib/                  # Shared instances & clients (prisma.ts)
-├── prisma/               # Database schema, migrations, and seed scripts
-│   ├── schema.prisma     # Relational models (User, Menu, Order, Attendance)
-│   └── seed.ts           # Development seed data
-├── prisma.config.ts      # Prisma 7 centralized configuration
-└── tsconfig.json         # TypeScript compiler configuration
+├── backend/
+│   ├── prisma/           # Database schema, migrations, and seed scripts
+│   │   ├── migrations/   # PostgreSQL schema history
+│   │   ├── schema.prisma # Relational data models
+│   │   └── seed.ts       # Database initial mock data
+│   ├── src/
+│   │   ├── lib/          # Prisma database client instance (prisma.ts)
+│   │   └── index.ts      # Express server & REST API endpoints
+│   ├── .env              # Backend environment variables (DB URL, Port)
+│   ├── package.json
+│   └── tsconfig.json
+├── frontend/
+│   ├── src/
+│   │   ├── app/
+│   │   │   ├── core/     # Global singleton services (HttpClient, Auth, Dashboard)
+│   │   │   ├── features/ # Feature views & pages (dashboard, menus, orders)
+│   │   │   ├── app.routes.ts # Frontend routing definitions
+│   │   │   └── app.ts    # Standalone root component
+│   │   ├── styles.scss   # Global styling and Material theme
+│   │   └── main.ts       # Application entry point
+│   ├── angular.json      # Angular workspace configuration
+│   ├── package.json
+│   └── tsconfig.json
+└── README.md
 ```
 
 ## Local Development Setup
@@ -47,24 +61,43 @@ PORT=3000
 
 **3. Install Dependencies**
 ```
+# Backend dependencies
+cd backend
+npm install
+
+# Frontend dependencies
+cd ../frontend
 npm install
 ```
 
 **4. Database Migrations & Seeding**
 ```
-# Run database migrations
+# Run migrations
 npx prisma migrate dev --name init_caterlink
+
+# Generate Prisma Client
+npx prisma generate
 
 # Populate initial seed data
 npx prisma db seed
 ```
 
 ## Running the Application
-Start the local Next.js development server:
+Both servers must run simultaneously in separate terminals:
+
+**1. Start Backend Server (Port 4000):**
 ```
+cd backend
 npm run dev
 ```
-Open **http://localhost:3000** in your browser.
+API running at: **http://localhost:4000**
+
+**2. Start Frontend App (Port 4200):**
+```
+cd frontend
+npm start
+```
+App running at: **http://localhost:4200**
 
 ## Demo Credentials (Seed)
 * **Administrator:** admin@caterlink.com | 123456
