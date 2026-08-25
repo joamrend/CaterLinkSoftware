@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CaterLink Software
 
-## Getting Started
+A comprehensive full-stack web platform designed for corporate catering management, weekly menu scheduling, order tracking, reporting, and employee attendance integration with biometric systems.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Tech Stack
+
+* **Frontend:** Next.js 15 (App Router), React 19, TypeScript, Tailwind CSS v4.
+* **UI Components & Charts:** Material UI (MUI v7), `@mui/x-date-pickers`, Recharts, Lottie React.
+* **Backend & Persistence:** Next.js Route Handlers (`/api/*`), Prisma ORM 7 (`@prisma/client`, `@prisma/adapter-pg`), PostgreSQL.
+* **Data & Spreadsheet Processing:** ExcelJS, SheetJS (`xlsx`), PapaParse, csv-parser.
+* **Automation & Background Jobs:** Node-cron for scheduled tasks.
+
+---
+
+## Project Structure
+
+```text
+caterlinksoftware/
+├── app/                  # App Router views & API Route Handlers
+│   ├── api/              # Backend endpoints (auth, attendance, orders, reports, etc.)
+│   ├── mk/               # Admin, provider, and employee dashboard views
+│   ├── layout.tsx        # Root application layout
+│   └── page.tsx          # Landing / Entry page
+├── lib/                  # Shared instances & clients (prisma.ts)
+├── prisma/               # Database schema, migrations, and seed scripts
+│   ├── schema.prisma     # Relational models (User, Menu, Order, Attendance)
+│   └── seed.ts           # Development seed data
+├── prisma.config.ts      # Prisma 7 centralized configuration
+└── tsconfig.json         # TypeScript compiler configuration
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Local Development Setup
+**1. Prerequisites**
+* Node.js v20+ installed
+* Local PostgreSQL instance running (default port 5432)
+* A dedicated database named **caterlink_db**.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+**2. Environment Variables**
+Create a **.env** file in the project root:
+```
+DATABASE_URL="postgresql://postgres:YOUR_LOCAL_PASSWORD@localhost:5432/caterlink_db?schema=public"
+NODE_ENV="development"
+PORT=3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**3. Install Dependencies**
+```
+npm install
+```
 
-## Learn More
+**4. Database Migrations & Seeding**
+```
+# Run database migrations
+npx prisma migrate dev --name init_caterlink
 
-To learn more about Next.js, take a look at the following resources:
+# Populate initial seed data
+npx prisma db seed
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Running the Application
+Start the local Next.js development server:
+```
+npm run dev
+```
+Open **http://localhost:3000** in your browser.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Demo Credentials (Seed)
+* **Administrator:** admin@caterlink.com | 123456
+* **Provider:** proveedor@caterlink.com | 123456
+* **Employee:** empleado@caterlink.com | 123456
