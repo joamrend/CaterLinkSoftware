@@ -1,0 +1,65 @@
+<div class="dashboard-container">
+  <header class="header">
+    <div>
+      <h1>Panel Principal <span class="accent">CaterLink</span></h1>
+      <p class="subtitle">Resumen operativo de servicios de catering, pedidos y asistencias</p>
+    </div>
+  </header>
+
+  @if (loading) {
+    <div class="status-msg">Cargando métricas desde el backend...</div>
+  } @else if (error) {
+    <div class="status-msg error">{{ error }}</div>
+  } @else if (data) {
+    <div class="metrics-grid">
+      <div class="card">
+        <span class="card-title">Usuarios Registrados</span>
+        <span class="card-value">{{ data.metrics.totalUsuarios }}</span>
+      </div>
+      <div class="card">
+        <span class="card-title">Órdenes Totales</span>
+        <span class="card-value">{{ data.metrics.totalOrdenes }}</span>
+      </div>
+      <div class="card">
+        <span class="card-title">Platos Configurados</span>
+        <span class="card-value">{{ data.metrics.totalPlatos }}</span>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <h2>Últimas Solicitudes Recibidas</h2>
+      
+      @if (data.ordenesRecientes.length > 0) {
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Usuario</th>
+              <th>Fecha</th>
+              <th>Estado</th>
+              <th>Detalle Platos</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (orden of data.ordenesRecientes; track orden.id) {
+              <tr>
+                <td>
+                  <strong>{{ orden.usuario.nombre }}</strong><br>
+                  <small>{{ orden.usuario.email }}</small>
+                </td>
+                <td>{{ orden.fecha | date:'mediumDate' }}</td>
+                <td><span class="badge">{{ orden.estado }}</span></td>
+                <td>
+                  @for (d of orden.detalles; track d.id) {
+                    <div>{{ d.cantidad }}x {{ d.plato.nombre }}</div>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      } @else {
+        <p class="empty-msg">No hay órdenes registradas aún.</p>
+      }
+    </div>
+  }
+</div>
