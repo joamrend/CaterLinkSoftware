@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Rol {
+  ADMIN
+  PROVEEDOR
+  EMPLEADO
+}
+
+enum EstadoOrden {
+  PENDIENTE
+  RECEPTADA
+  CANCELADA
+}
+
+model Usuario {
+  id            String       @id @default(uuid())
+  email         String       @unique
+  nombre        String
+  password      String
+  rol           Rol          @default(EMPLEADO)
+  cedula        String?      @unique
+  asistencias   Asistencia[]
+  ordenes       Orden[]
+  creadoEn      DateTime     @default(now())
+  actualizadoEn DateTime     @updatedAt
+}
+
+model MenuSemanal {
+  id          String   @id @default(uuid())
+  fechaInicio DateTime
+  fechaFin    DateTime
+  platos      Plato[]
+  creadoEn    DateTime @default(now())
+}
+
+model Plato {
+  id            String         @id @default(uuid())
+  nombre        String
+  descripcion   String?
+  diaSemana     Int            // 1: Lunes, 2: Martes, etc.
+  menuSemanalId String
+  menuSemanal   MenuSemanal    @relation(fields: [menuSemanalId], references: [id], onDelete: Cascade)
+  detallesOrden DetalleOrden[]
+}
+
+model Orden {
+  id          String         @id @default(uuid())
+  usuarioId   String
+  usuario     Usuario        @relation(fields: [usuarioId], references: [id])
+  fecha       DateTime       @default(now())
+  estado      EstadoOrden    @default(PENDIENTE)
+  detalles    DetalleOrden[]
+}
+
+model DetalleOrden {
+  id        String   @id @default(uuid())
+  ordenId   String
+  orden     Orden    @relation(fields: [ordenId], references: [id], onDelete: Cascade)
+  platoId   String
+  plato     Plato    @relation(fields: [platoId], references: [id])
+  cantidad  Int      @default(1)
+}
+
+model Asistencia {
+  id           String   @id @default(uuid())
+  usuarioId    String
+  usuario      Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  fechaHora    DateTime @default(now())
+  biometricoId String?
+  tipo         String?
+}
